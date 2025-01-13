@@ -70,7 +70,7 @@ const generateUniqueTweet = async (topic) => {
 };
 
 // // Cron job to tweet at 5 AM
-const cronTweetMorning = new CronJob('0 5 * * *' , async () => { //0 5 * * *
+const cronTweetMorning = new CronJob('30 5 * * *'   , async () => { //0 5 * * *
     try {
       const trendingTopics = await getTrendingTopicsFromGoogle();
       if (trendingTopics.length > 0) {
