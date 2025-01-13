@@ -1,6 +1,7 @@
 name: Tweet Cron
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
 jobs:
   tweet:
     runs-on: ubuntu-latest
@@ -18,6 +19,9 @@ jobs:
 
       - name: Create .env file from ENV_FILE secret
         run: echo "${{ secrets.ENV_FILE }}" > .env
+
+      - name: Check .env file content (for debugging)
+        run: cat .env  # Debugging step to ensure .env is created correctly
 
       - name: Run Twitter Bot
         run: node index.js

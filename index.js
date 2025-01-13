@@ -1,14 +1,13 @@
-import fetch from 'node-fetch';  // Node-fetch v3 is an ES Module
-import dotenv from 'dotenv';  // Correct ESM import for dotenv
-import express from 'express';  // ESM import for Express
-import twitterClient from './twitterClient.js';  // Correct ESM import for your custom module
-import { GoogleGenerativeAI } from '@google/generative-ai';  // ESM import for Google Generative AI
-import googleTrends from 'google-trends-api';  // Correct ESM import for google-trends-api
+import fetch from 'node-fetch'; 
+import express from 'express';  
+import twitterClient from './twitterClient.js';  
+import { GoogleGenerativeAI } from '@google/generative-ai';  
+import googleTrends from 'google-trends-api'; 
+import dotenv from "dotenv"
+dotenv.config()
 
-// Load environment variables
-dotenv.config({ path: __dirname + "/.env" });
 
-const googleApiKey = process.env.GOOGLE_API_KEY;  // Ensure GOOGLE_API_KEY is defined in your .env file
+const googleApiKey = process.env.GOOGLE_API_KEY;  
 
 const genAI = new GoogleGenerativeAI(googleApiKey);
 const model = genAI.getGenerativeModel({

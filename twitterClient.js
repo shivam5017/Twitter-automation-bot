@@ -1,6 +1,7 @@
 import { TwitterApi } from 'twitter-api-v2';
+import dotenv from 'dotenv'
+dotenv.config();
 
-// Initialize Twitter client
 const client = new TwitterApi({
   appKey: process.env.CONSUMER_KEY,
   appSecret: process.env.CONSUMER_SECRET,
