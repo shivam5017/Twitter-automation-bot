@@ -1,11 +1,6 @@
-name: Twitter Cron
+name: Tweet Cron
 
-on:
-  schedule:
-    - cron: '30 8 * * *'  
-    - cron: '0 14 * * *' 
-    - cron: '0 20 * * *'  
-
+on: workflow_dispatch
 jobs:
   tweet:
     runs-on: ubuntu-latest
