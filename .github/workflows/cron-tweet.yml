@@ -25,7 +25,7 @@ jobs:
         run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Check .env file content (for debugging)
-        run: cat .env  # Debugging step to ensure .env is created correctly
+        run: cat .env 
 
       - name: Run Twitter Bot
         run: node index.js

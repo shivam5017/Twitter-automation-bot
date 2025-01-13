@@ -62,15 +62,23 @@ const getTrendingTopicsFromGoogle = async () => {
 
 const generateAICryptoTweet = async (trendingTopics) => {
   try {
-    const prompt = `Write an engaging tweet about ${trendingTopics}. Keep it relevant and fun!`;
+    const prompt = `Write an engaging tweet about ${trendingTopics}. Keep it relevant and fun! Limit the tweet to two hashtags.`;
     const result = await model.generateContent(prompt);
     const tweetObject = JSON.parse(await result.response.text());
-    return tweetObject?.tweet || "No tweet generated";
+    let tweet = tweetObject?.tweet || "No tweet generated";
+
+    const hashtags = tweet.match(/#\w+/g);
+    if (hashtags && hashtags.length > 2) {
+      tweet = tweet.replace(/#\w+/g, (match, index) => index < 2 ? match : '');
+    }
+
+    return tweet;
   } catch (e) {
     console.log('Error generating AI tweet:', e);
     return null;
   }
 };
+
 
 const tweeting = async () => {
   try {
@@ -80,15 +88,19 @@ const tweeting = async () => {
       console.log(`Selected topic for tweet (10 AM): #${randomTopic}`);
       
       const uniqueTweet = await generateAICryptoTweet(randomTopic);
-      console.log(uniqueTweet,'test')
+      console.log(uniqueTweet, 'test');
+      
       const tweetResponse = await twitterClient.v2.tweet(uniqueTweet);
-      console.log(tweetResponse,'tweet response')
+      console.log(tweetResponse, 'tweet response');
       console.log('Tweet posted successfully at 10 AM!', tweetResponse);
     } else {
       console.log('No trending topics available.');
     }
   } catch (error) {
     console.error('Error in tweet posting:', error);
+  } finally {
+    console.log("Exiting the process.");
+    process.exit(0); 
   }
 };
 
