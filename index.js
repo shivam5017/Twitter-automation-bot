@@ -47,7 +47,7 @@ const getTrendingTopicsFromGoogle = async () => {
 
 const generateAICryptoTweet = async (trendingTopics) => {
   try {
-    const prompt = `Write a tweet about the trending topic: ${trendingTopics}`;
+    const prompt = `Write a tweet about the topic: ${trendingTopics}`;
     const result = await model.generateContent(prompt);
     const tweetObject = JSON.parse(await result.response.text());
     return tweetObject?.tweet || "No tweet generated";
@@ -68,21 +68,22 @@ const generateUniqueTweet = async (topic) => {
   tweetedMessages.add(tweet);
   return tweet;
 };
+generateUniqueTweet()
 
 
-// Cron job to tweet at 5 AM
-const cronTweetMorning = new CronJob('0 5 * * *', async () => {
+// // Cron job to tweet at 5 AM
+const cronTweetMorning = new CronJob('0 10 * * *', async () => { //0 5 * * *
     try {
       const trendingTopics = await getTrendingTopicsFromGoogle();
       if (trendingTopics.length > 0) {
         const randomTopic = trendingTopics[Math.floor(Math.random() * trendingTopics.length)];
-        console.log(`Selected topic for tweet (5 AM): #${randomTopic}`);
+        console.log(`Selected topic for tweet (10 AM): #${randomTopic}`);
         
         const uniqueTweet = await generateUniqueTweet(randomTopic);
         if (uniqueTweet) {
           console.log('Tweeting AI-generated content:', uniqueTweet);
           await twitterClient.v2.tweet(uniqueTweet);
-          console.log('Tweet posted successfully at 5 AM!');
+          console.log('Tweet posted successfully at 10 AM!');
         }
       } else {
         console.log('No trending topics available.');
@@ -92,7 +93,7 @@ const cronTweetMorning = new CronJob('0 5 * * *', async () => {
     }
   });
   
-  // Cron job to tweet at 2 PM
+//   // Cron job to tweet at 2 PM
   const cronTweetAfternoon = new CronJob('0 14 * * *', async () => {
     try {
       const trendingTopics = await getTrendingTopicsFromGoogle();
