@@ -1,14 +1,9 @@
-
-const fetch = require('node-fetch'); 
-
-require("dotenv").config({ path: __dirname + "/.env" });
-const express = require('express');
-const { twitterClient } = require("./twitterClient.js");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const CronJob = require("cron").CronJob;
-const googleTrends = require('google-trends-api');
-const googleApiKey = process.env.GOOGLE_API_KEY;
-
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
+import express from 'express';
+import { twitterClient } from "./twitterClient.js"; 
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import googleTrends from 'google-trends-api';
 const genAI = new GoogleGenerativeAI(googleApiKey);
 const model = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
@@ -16,6 +11,8 @@ const model = genAI.getGenerativeModel({
     responseMimeType: "application/json",
   },
 });
+
+dotenv.config({ path: __dirname + "/.env" });
 
 const app = express();
 const port = process.env.PORT || 4000;
