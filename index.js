@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import dotenv from 'dotenv';
 import express from 'express';
-import { twitterClient } from "./twitterClient.js"; 
+import twitterClient from './twitterClient.js'; 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import googleTrends from 'google-trends-api';
 const genAI = new GoogleGenerativeAI(googleApiKey);
