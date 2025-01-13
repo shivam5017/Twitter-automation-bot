@@ -1,7 +1,11 @@
 name: Tweet Cron
 
 on:
-  workflow_dispatch:
+   schedule:
+    - cron: '30 12 * * *'  
+    - cron: '30 7 * * *' 
+    - cron: '30 3 * * *'  
+
 jobs:
   tweet:
     runs-on: ubuntu-latest

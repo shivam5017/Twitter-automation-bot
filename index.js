@@ -1,14 +1,28 @@
-import fetch, { Headers } from 'node-fetch'; // Import fetch and Headers from node-fetch
-globalThis.fetch = fetch;                    // Make fetch available globally
-globalThis.Headers = Headers;                // Make Headers available globally
+import fetch, { Headers } from 'node-fetch'; 
+globalThis.fetch = fetch;                   
+globalThis.Headers = Headers;               
 
 import dotenv from 'dotenv';
 import express from 'express';
-import twitterClient from './twitterClient.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import googleTrends from 'google-trends-api';
+import { TwitterApi } from 'twitter-api-v2';
 
 dotenv.config();
+
+
+const client = new TwitterApi({
+  appKey: process.env.CONSUMER_KEY,
+  appSecret: process.env.CONSUMER_SECRET,
+  accessToken: process.env.ACCESS_TOKEN,
+  accessSecret: process.env.ACCESS_SECRET,
+});
+
+const bearer = new TwitterApi(process.env.BEARER_TOKEN);
+
+const twitterClient = client.readWrite;
+const twitterBearer = bearer.readOnly;
+
 
 const googleApiKey = process.env.GOOGLE_API_KEY;
 
@@ -31,8 +45,8 @@ app.listen(port, () => {
 const getTrendingTopicsFromGoogle = async () => {
   try {
     const results = await googleTrends.dailyTrends({
-      geo: 'US', 
-      category: 'all', 
+      geo: 'IN', 
+      category: 'news', 
     });
 
     const trendingTopics = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
@@ -66,7 +80,9 @@ const tweeting = async () => {
       console.log(`Selected topic for tweet (10 AM): #${randomTopic}`);
       
       const uniqueTweet = await generateAICryptoTweet(randomTopic);
+      console.log(uniqueTweet,'test')
       const tweetResponse = await twitterClient.v2.tweet(uniqueTweet);
+      console.log(tweetResponse,'tweet response')
       console.log('Tweet posted successfully at 10 AM!', tweetResponse);
     } else {
       console.log('No trending topics available.');
