@@ -1,13 +1,15 @@
-import fetch from 'node-fetch'; 
-import express from 'express';  
-import twitterClient from './twitterClient.js';  
-import { GoogleGenerativeAI } from '@google/generative-ai';  
-import googleTrends from 'google-trends-api'; 
-import dotenv from "dotenv"
-dotenv.config()
+import fetch from 'node-fetch';  
+globalThis.fetch = fetch;    
 
+import dotenv from 'dotenv';
+import express from 'express';
+import twitterClient from './twitterClient.js';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import googleTrends from 'google-trends-api';
 
-const googleApiKey = process.env.GOOGLE_API_KEY;  
+dotenv.config();
+
+const googleApiKey = process.env.GOOGLE_API_KEY;
 
 const genAI = new GoogleGenerativeAI(googleApiKey);
 const model = genAI.getGenerativeModel({
@@ -68,25 +70,25 @@ const generateUniqueTweet = async (topic) => {
   return tweet;
 };
 
-const tweeting = async() => {
+const tweeting = async () => {
   try {
-      const trendingTopics = await getTrendingTopicsFromGoogle();
-      if (trendingTopics.length > 0) {
-        const randomTopic = trendingTopics[Math.floor(Math.random() * trendingTopics.length)];
-        console.log(`Selected topic for tweet (10 AM): #${randomTopic}`);
-        
-        const uniqueTweet = await generateUniqueTweet(randomTopic);
-        if (uniqueTweet) {
-          console.log('Tweeting AI-generated content:', uniqueTweet);
-          await twitterClient.v2.tweet(uniqueTweet);
-          console.log('Tweet posted successfully at 10 AM!');
-        }
-      } else {
-        console.log('No trending topics available.');
+    const trendingTopics = await getTrendingTopicsFromGoogle();
+    if (trendingTopics.length > 0) {
+      const randomTopic = trendingTopics[Math.floor(Math.random() * trendingTopics.length)];
+      console.log(`Selected topic for tweet (10 AM): #${randomTopic}`);
+      
+      const uniqueTweet = await generateUniqueTweet(randomTopic);
+      if (uniqueTweet) {
+        console.log('Tweeting AI-generated content:', uniqueTweet);
+        await twitterClient.v2.tweet(uniqueTweet);
+        console.log('Tweet posted successfully at 10 AM!');
       }
-    } catch (error) {
-      console.error('Error in 5 AM tweet posting:', error);
+    } else {
+      console.log('No trending topics available.');
     }
+  } catch (error) {
+    console.error('Error in tweet posting:', error);
+  }
 };
 
 tweeting();
