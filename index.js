@@ -66,11 +66,8 @@ const tweeting = async () => {
       console.log(`Selected topic for tweet (10 AM): #${randomTopic}`);
       
       const uniqueTweet = await generateAICryptoTweet(randomTopic);
-      if (uniqueTweet) {
-        console.log('Tweeting AI-generated content:', uniqueTweet);
-        await twitterClient.v2.tweet(uniqueTweet);
-        console.log('Tweet posted successfully at 10 AM!');
-      }
+      const tweetResponse = await twitterClient.v2.tweet(uniqueTweet);
+      console.log('Tweet posted successfully at 10 AM!', tweetResponse);
     } else {
       console.log('No trending topics available.');
     }
