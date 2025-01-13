@@ -1,5 +1,6 @@
-import fetch from 'node-fetch';  
-globalThis.fetch = fetch;    
+import fetch, { Headers } from 'node-fetch'; // Import fetch and Headers from node-fetch
+globalThis.fetch = fetch;                    // Make fetch available globally
+globalThis.Headers = Headers;                // Make Headers available globally
 
 import dotenv from 'dotenv';
 import express from 'express';
