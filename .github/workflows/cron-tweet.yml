@@ -2,7 +2,7 @@ name: Twitter Bot Cron Jobs
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # Run at 5 AM UTC
+    - cron: '0 10 * * *'  # Run at 5 AM UTC
     - cron: '0 14 * * *'  # Run at 2 PM UTC
     - cron: '0 20 * * *'  # Run at 8 PM UTC
 
@@ -24,7 +24,6 @@ jobs:
       - name: Run Twitter Bot
         run: node index.js  # Change this to the correct file that runs your bot
         env:
-          NODE_ENV: ${{ secrets.NODE_ENV }}
           API_KEY: ${{ secrets.API_KEY }}
           API_SECRET: ${{ secrets.API_SECRET }}
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
