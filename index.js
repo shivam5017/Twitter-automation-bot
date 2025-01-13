@@ -1,18 +1,22 @@
-import fetch from 'node-fetch';
-import dotenv from 'dotenv';
-import express from 'express';
-import twitterClient from './twitterClient.js'; 
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import googleTrends from 'google-trends-api';
+import fetch from 'node-fetch';  // Node-fetch v3 is an ES Module
+import dotenv from 'dotenv';  // Correct ESM import for dotenv
+import express from 'express';  // ESM import for Express
+import twitterClient from './twitterClient.js';  // Correct ESM import for your custom module
+import { GoogleGenerativeAI } from '@google/generative-ai';  // ESM import for Google Generative AI
+import googleTrends from 'google-trends-api';  // Correct ESM import for google-trends-api
+
+// Load environment variables
+dotenv.config({ path: __dirname + "/.env" });
+
+const googleApiKey = process.env.GOOGLE_API_KEY;  // Ensure GOOGLE_API_KEY is defined in your .env file
+
 const genAI = new GoogleGenerativeAI(googleApiKey);
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash",
+  model: 'gemini-1.5-flash',
   generationConfig: {
-    responseMimeType: "application/json",
+    responseMimeType: 'application/json',
   },
 });
-
-dotenv.config({ path: __dirname + "/.env" });
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -24,21 +28,21 @@ app.listen(port, () => {
 });
 
 const getTrendingTopicsFromGoogle = async () => {
-    try {
-      const results = await googleTrends.dailyTrends({
-        geo: 'US', 
-        category: 'all', 
-      });
+  try {
+    const results = await googleTrends.dailyTrends({
+      geo: 'US', 
+      category: 'all', 
+    });
 
-      const trendingTopics = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
-        .map(item => item.title.query); 
+    const trendingTopics = JSON.parse(results).default.trendingSearchesDays[0].trendingSearches
+      .map(item => item.title.query); 
 
-      console.log('Trending topics from Google Trends:', trendingTopics);
-      return trendingTopics;
-    } catch (error) {
-      console.error('Error fetching trending topics from Google Trends:', error);
-      return [];
-    }
+    console.log('Trending topics from Google Trends:', trendingTopics);
+    return trendingTopics;
+  } catch (error) {
+    console.error('Error fetching trending topics from Google Trends:', error);
+    return [];
+  }
 };
 
 const generateAICryptoTweet = async (trendingTopics) => {
@@ -55,7 +59,7 @@ const generateAICryptoTweet = async (trendingTopics) => {
 
 const generateUniqueTweet = async (topic) => {
   let tweet = await generateAICryptoTweet(topic);
-  
+
   // Keep regenerating the tweet until it's unique
   while (tweetedMessages.has(tweet)) {
     tweet = await generateAICryptoTweet(topic);
@@ -84,6 +88,6 @@ const tweeting = async() => {
     } catch (error) {
       console.error('Error in 5 AM tweet posting:', error);
     }
-}
+};
 
 tweeting();
