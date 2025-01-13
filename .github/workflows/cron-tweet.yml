@@ -2,7 +2,7 @@ name: Twitter Bot Cron Jobs
 
 on:
   schedule:
-    - cron: '10 10 * * *'  # Run at 5 AM UTC
+    - cron: '20 10 * * *'  # Run at 5 AM UTC
     - cron: '0 14 * * *'  # Run at 2 PM UTC
     - cron: '0 20 * * *'  # Run at 8 PM UTC
 

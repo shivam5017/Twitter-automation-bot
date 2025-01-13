@@ -47,7 +47,7 @@ const getTrendingTopicsFromGoogle = async () => {
 
 const generateAICryptoTweet = async (trendingTopics) => {
   try {
-    const prompt = `Write a tweet about the topic: ${trendingTopics}`;
+    const prompt = `Write an engaging tweet about ${trendingTopics}. Keep it relevant and fun!`;
     const result = await model.generateContent(prompt);
     const tweetObject = JSON.parse(await result.response.text());
     return tweetObject?.tweet || "No tweet generated";
@@ -68,8 +68,6 @@ const generateUniqueTweet = async (topic) => {
   tweetedMessages.add(tweet);
   return tweet;
 };
-generateUniqueTweet()
-
 
 // // Cron job to tweet at 5 AM
 const cronTweetMorning = new CronJob('10 10 * * *', async () => { //0 5 * * *
