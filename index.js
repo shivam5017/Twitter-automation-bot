@@ -15,9 +15,8 @@ const model = genAI.getGenerativeModel({
 
 const app = express();
 const port = process.env.PORT || 4000;
-const cryptoHashtags = ["Bitcoin"];
 
-// Store previously tweeted AI content to avoid duplication
+
 let tweetedMessages = new Set();
 
 app.listen(port, () => {
@@ -69,74 +68,26 @@ const generateUniqueTweet = async (topic) => {
   return tweet;
 };
 
-// // Cron job to tweet at 5 AM
-const cronTweetMorning = new CronJob('30 5 * * *'   , async () => { //0 5 * * *
+  const tweeting = async() => {
     try {
-      const trendingTopics = await getTrendingTopicsFromGoogle();
-      if (trendingTopics.length > 0) {
-        const randomTopic = trendingTopics[Math.floor(Math.random() * trendingTopics.length)];
-        console.log(`Selected topic for tweet (10 AM): #${randomTopic}`);
-        
-        const uniqueTweet = await generateUniqueTweet(randomTopic);
-        if (uniqueTweet) {
-          console.log('Tweeting AI-generated content:', uniqueTweet);
-          await twitterClient.v2.tweet(uniqueTweet);
-          console.log('Tweet posted successfully at 10 AM!');
+        const trendingTopics = await getTrendingTopicsFromGoogle();
+        if (trendingTopics.length > 0) {
+          const randomTopic = trendingTopics[Math.floor(Math.random() * trendingTopics.length)];
+          console.log(`Selected topic for tweet (10 AM): #${randomTopic}`);
+          
+          const uniqueTweet = await generateUniqueTweet(randomTopic);
+          if (uniqueTweet) {
+            console.log('Tweeting AI-generated content:', uniqueTweet);
+            await twitterClient.v2.tweet(uniqueTweet);
+            console.log('Tweet posted successfully at 10 AM!');
+          }
+        } else {
+          console.log('No trending topics available.');
         }
-      } else {
-        console.log('No trending topics available.');
+      } catch (error) {
+        console.error('Error in 5 AM tweet posting:', error);
       }
-    } catch (error) {
-      console.error('Error in 5 AM tweet posting:', error);
-    }
-  });
+  }
   
-//   // Cron job to tweet at 2 PM
-  const cronTweetAfternoon = new CronJob('0 14 * * *', async () => {
-    try {
-      const trendingTopics = await getTrendingTopicsFromGoogle();
-      if (trendingTopics.length > 0) {
-        const randomTopic = trendingTopics[Math.floor(Math.random() * trendingTopics.length)];
-        console.log(`Selected topic for tweet (2 PM): #${randomTopic}`);
-        
-        const uniqueTweet = await generateUniqueTweet(randomTopic);
-        if (uniqueTweet) {
-          console.log('Tweeting AI-generated content:', uniqueTweet);
-          await twitterClient.v2.tweet(uniqueTweet);
-          console.log('Tweet posted successfully at 2 PM!');
-        }
-      } else {
-        console.log('No trending topics available.');
-      }
-    } catch (error) {
-      console.error('Error in 2 PM tweet posting:', error);
-    }
-  });
-  
-  // Cron job to tweet at 8 PM
-  const cronTweetEvening = new CronJob('0 20 * * *', async () => {
-    try {
-      const trendingTopics = await getTrendingTopicsFromGoogle();
-      if (trendingTopics.length > 0) {
-        const randomTopic = trendingTopics[Math.floor(Math.random() * trendingTopics.length)];
-        console.log(`Selected topic for tweet (8 PM): #${randomTopic}`);
-        
-        const uniqueTweet = await generateUniqueTweet(randomTopic);
-        if (uniqueTweet) {
-          console.log('Tweeting AI-generated content:', uniqueTweet);
-          await twitterClient.v2.tweet(uniqueTweet);
-          console.log('Tweet posted successfully at 8 PM!');
-        }
-      } else {
-        console.log('No trending topics available.');
-      }
-    } catch (error) {
-      console.error('Error in 8 PM tweet posting:', error);
-    }
-  });
-  
-  // Start all cron jobs
-  cronTweetMorning.start();
-  cronTweetAfternoon.start();
-  cronTweetEvening.start();
-  
+
+  tweeting();
