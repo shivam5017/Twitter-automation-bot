@@ -23,7 +23,6 @@ const model = genAI.getGenerativeModel({
 const app = express();
 const port = process.env.PORT || 4000;
 
-let tweetedMessages = new Set();
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
@@ -59,18 +58,6 @@ const generateAICryptoTweet = async (trendingTopics) => {
   }
 };
 
-const generateUniqueTweet = async (topic) => {
-  let tweet = await generateAICryptoTweet(topic);
-
-  // Keep regenerating the tweet until it's unique
-  while (tweetedMessages.has(tweet)) {
-    tweet = await generateAICryptoTweet(topic);
-  }
-
-  tweetedMessages.add(tweet);
-  return tweet;
-};
-
 const tweeting = async () => {
   try {
     const trendingTopics = await getTrendingTopicsFromGoogle();
@@ -78,7 +65,7 @@ const tweeting = async () => {
       const randomTopic = trendingTopics[Math.floor(Math.random() * trendingTopics.length)];
       console.log(`Selected topic for tweet (10 AM): #${randomTopic}`);
       
-      const uniqueTweet = await generateUniqueTweet(randomTopic);
+      const uniqueTweet = await generateAICryptoTweet(randomTopic);
       if (uniqueTweet) {
         console.log('Tweeting AI-generated content:', uniqueTweet);
         await twitterClient.v2.tweet(uniqueTweet);
