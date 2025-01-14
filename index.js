@@ -62,7 +62,7 @@ const getTrendingTopicsFromGoogle = async () => {
 
 const generateAICryptoTweet = async (trendingTopics) => {
   try {
-    const prompt = `Write an engaging tweet about ${trendingTopics}. Keep it relevant and fun! Limit the tweet to two hashtags.`;
+    const prompt = "Write a brief, engaging tweet about the latest news related to ${trendingTopic}. Include important details and make sure it's framed for an Indian audience. Limit the tweet to 280 characters and use 1-2 relevant hashtags."
     const result = await model.generateContent(prompt);
     const tweetObject = JSON.parse(await result.response.text());
     let tweet = tweetObject?.tweet || "No tweet generated";
