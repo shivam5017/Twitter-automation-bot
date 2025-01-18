@@ -19,6 +19,5 @@
     "node-fetch": "^3.3.2",
     "twitter-api-v2": "^1.19.0"
   },
-   "type": "module"
-  
+  "type": "module"
 }
